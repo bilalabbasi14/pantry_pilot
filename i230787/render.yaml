@@ -1,0 +1,24 @@
+services:
+  - type: web
+    name: pantry-pilot-i230787
+    runtime: python
+    plan: free
+    buildCommand: pip install -r requirements.txt
+    startCommand: uvicorn app.main:app --host 0.0.0.0 --port $PORT --workers 1
+    healthCheckPath: /health
+    envVars:
+      - key: PYTHON_VERSION
+        value: 3.12.10
+      - key: MODEL_PROVIDER
+        value: gemini
+      - key: MODEL_NAME
+        value: gemini-3.5-flash-lite
+      - key: ALTERNATE_MODELS
+        value: groq:openai/gpt-oss-120b
+      - key: ENABLE_MODEL_FALLBACK
+        value: "true"
+      # Secrets: entered manually in the Render dashboard, never committed.
+      - key: GEMINI_API_KEY
+        sync: false
+      - key: GROQ_API_KEY
+        sync: false

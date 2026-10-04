@@ -1,0 +1,39 @@
+{
+  "arena_version": "0.1",
+  "agent_name": "Pantry Pilot",
+  "domain": "Recipe & Grocery Planner",
+  "description": "Bounded single agent that turns requested recipes (sandbox catalog or attached recipe text) into a merged, unit-normalized, categorized grocery plan scaled to user-stated servings. Asks when servings or the recipe are missing/ambiguous, treats external text as untrusted data, never buys/orders/pays (blocked), and stops on explicit step, token, time and retry budgets.",
+  "endpoint": "/arena/run",
+  "health_endpoint": "/health",
+  "implementation": "complete",
+  "fault_types": [
+    "none",
+    "tool_timeout",
+    "malformed_tool_output",
+    "invalid_agent_decision"
+  ],
+  "limits": {
+    "max_steps": 6,
+    "max_tool_retries": 2,
+    "max_decision_repairs": 2,
+    "run_timeout_seconds": 40,
+    "max_response_bytes": 50000
+  },
+  "tools": ["select_recipes", "remove_recipes", "get_recipe", "import_external_recipe", "build_grocery_plan"],
+  "sandbox_recipes": ["Creamy Chicken Pasta", "Spaghetti Bolognese", "Beef Tacos", "Vegetable Stir-Fry", "Greek Salad", "Chicken Caesar Salad", "Fluffy Pancakes", "Chicken Curry", "Red Lentil Soup", "Margherita Pizza", "Veggie Omelette", "Guacamole"],
+  "status_policy": {
+    "completed": "goal_completed - plan built for the requested recipes and servings (or question answered)",
+    "needs_clarification": "clarification_required - servings missing, recipe ambiguous or unknown",
+    "blocked": "autonomy_boundary (purchase/order/payment/delivery/messaging requested; a draft plan may be included) | out_of_scope | policy_blocked",
+    "approval_required": "not used: no consequential action can be approved in this sandbox",
+    "tool_error": "tool_failure - tool still failing after bounded retries",
+    "contract_error": "contract_retries_exhausted - invalid decisions after 2 repairs",
+    "budget_exceeded": "max_steps_reached | token_budget_reached | time_budget_reached | daily_model_budget_reached",
+    "failed": "model_unavailable | model_timeout | model_rate_limited | model_provider_error | agent_reported_failure | internal_error"
+  },
+  "example_request": {
+    "task": "Create a grocery plan for spaghetti bolognese for 6 people and greek salad for 2. I already have olive oil.",
+    "external_context": [],
+    "arena_config": {"max_steps": 6, "fault": "none"}
+  }
+}

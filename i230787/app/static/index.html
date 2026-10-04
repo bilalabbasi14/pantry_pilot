@@ -1,0 +1,9 @@
+<!doctype html><html lang="en"><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Pantry Pilot</title><link rel="stylesheet" href="/static/style.css">
+<header><h1>Pantry Pilot</h1><p>Recipe &amp; Grocery Planner agent · sandbox only: it plans lists, it never buys, orders or pays</p><a href="/docs">API documentation</a></header>
+<main><section><label for="model">Model</label><select id="model"></select><button id="reset" type="button">New chat</button>
+<p class="hint">Try: “Plan beef tacos for 4 and greek salad for 2, I already have olive oil” · “Make a grocery plan from the chicken pasta recipe” then answer the question · “Remove the tacos”.</p>
+<div id="messages" aria-live="polite"></div><form id="chat"><label for="task">Your request</label><textarea id="task" required maxlength="10000"></textarea><button id="send">Send</button></form></section>
+<aside><h2>Current run</h2><p id="status" role="status">Idle</p><p id="metrics"></p><h2>Action timeline</h2><ol id="timeline"><li>No steps yet.</li></ol><h2>Tool calls</h2><pre id="trace">No tool calls yet.</pre>
+<label for="external">Untrusted external content (optional, e.g. a pasted recipe)</label><textarea id="external" maxlength="10000"></textarea><p id="memory">0 messages in this chat</p>
+<details><summary>Raw events</summary><pre id="observations">No observations yet.</pre></details></aside></main>
+<footer>Memory is temporary (in-memory, single server process). Reloading or “New chat” starts a new session. Never paste API keys into the interface.</footer><script src="/static/app.js"></script></html>
