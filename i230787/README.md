@@ -10,7 +10,8 @@ Agentic AI · Assignment 1 · Agent Arena · Fall 2026
 | University email | i230787@isb.nu.edu.pk |
 | Domain | Recipe & Grocery Planner (recipe files → merged grocery plan) |
 | Default model | `gemini-3.5-flash-lite` (Gemini API); alternate/fallback `openai/gpt-oss-120b` (Groq) |
-| Deployment | Deployment-ready (Dockerfile, render.yaml), **not deployed yet**. GitHub and Render steps are left for the student to do manually (see [Deployment](#deployment-manual-steps-for-the-student)). |
+| Live service | https://pantry-pilot-i230787.onrender.com/ (Render free tier) · [health](https://pantry-pilot-i230787.onrender.com/health) · [manifest](https://pantry-pilot-i230787.onrender.com/arena/manifest) · [API docs](https://pantry-pilot-i230787.onrender.com/docs) |
+| Repository | https://github.com/bilalabbasi14/pantry_pilot (private; project in `i230787/`) |
 
 ---
 
@@ -431,11 +432,23 @@ Fault injection: `"fault": "tool_timeout" | "malformed_tool_output" | "invalid_a
 fires once on the first matching operation. Tool faults fire on the first tool execution and are recovered by retry;
 the decision fault replaces the first model decision and is recovered by a repair (costs one step).
 
-## Deployment (manual steps for the student)
+## Deployment
 
-Nothing below has been done. No GitHub repository, commit, push or Render service was created.
+**Deployed** on Render (free web service) at https://pantry-pilot-i230787.onrender.com from
+`github.com/bilalabbasi14/pantry_pilot` (`main`, root directory `i230787`). Checked live on 2026-10-04: `/health` returned
+200 with `model_configured: true`; `/arena/manifest`, `/` and `/docs` returned 200; the example Arena request returned
+`completed` / `goal_completed` in 2 steps.
 
-Locally verified: Docker image build; container run with `PORT=10000`; `/health` (Docker healthcheck "healthy"),
+Public cases against the deployed URL:
+- [public_results_deployed_paced.json](evaluation/results/public_results_deployed_paced.json): **10/10** with 20 s between cases.
+- [public_results_deployed.json](evaluation/results/public_results_deployed.json): **8/10** with 3 s between cases. Both
+  failures were `failed` / `model_rate_limited`: Gemini's free quota was in cooldown, and the Groq fallback was also
+  limited at that moment. The agent stopped safely with a typed failure. This is the free-tier quota limitation described in
+  [Limitations](#limitations), not an agent logic error. A retry of one failed case a minute later passed through the Groq fallback.
+
+The steps below are how it was set up; they also work for redeploying.
+
+Locally verified before deployment: Docker image build; container run with `PORT=10000`; `/health` (Docker healthcheck "healthy"),
 `/arena/manifest`, `/`, `/docs`; a valid Arena POST with `tool_timeout` fault → `completed`; an invalid POST → 422;
 missing keys → `model_configured: false` and a typed `model_unavailable` failure. A working local container does not prove
 the Render deployment works; verify on the public URL.
